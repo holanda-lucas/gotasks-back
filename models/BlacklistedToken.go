@@ -1,11 +1,7 @@
 package models
 
-import (
-	"gorm.io/gorm"
-)
-
 type BlacklistedToken struct {
-	gorm.Model
+	ID                uint `gorm:"primaryKey"`
 	Token             string
 	ExpirationDate    int64
 }

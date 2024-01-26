@@ -7,6 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/holanda-lucas/gotasks-back/database"
 	"github.com/holanda-lucas/gotasks-back/models"
+	"github.com/holanda-lucas/gotasks-back/util"
 )
 
 func GetUser(c *gin.Context) {
@@ -27,6 +28,7 @@ func GetUser(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H {
 			"erro": "Usuário não encontrado",
 		})
+		return
 	}
 
 	c.JSON(http.StatusOK, user)
@@ -48,6 +50,12 @@ func DeleteUser(c *gin.Context) {
 
 	database.DeleteUser(uintId)
 
+	// Deletando as tasks associadas ao user deletado
+	userTasks := database.GetTasksFromUser(uintId)
+	for _, task := range userTasks {
+		database.DeleteTask(task.ID)
+	}
+
 	c.JSON(http.StatusOK, gin.H{
 		"sucesso":"usuário deletado",
 	})
@@ -58,6 +66,24 @@ func CreateUser(c *gin.Context) {
 
 	err := c.ShouldBindJSON(&user)
 
+	// Erro no bind
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H {
+			"erro": "formato de informações errado",
+		})
+	}
+
+	hash, err := util.HashPassword(user.Password)
+
+	// Erro no bcrypt
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H {
+			"erro": "não foi possível criptografar sua senha",
+		})
+	}
+
+	user.Password = hash
+
 	// Erro nos dados
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -67,7 +93,11 @@ func CreateUser(c *gin.Context) {
 	}
 
 	database.RegisterUser(&user)
-	c.JSON(http.StatusAccepted, user)
+
+	jsonUser := database.GetUser(user.ID)
+
+
+	c.JSON(http.StatusAccepted, jsonUser)
 }
 
 func EditUser(c *gin.Context) {

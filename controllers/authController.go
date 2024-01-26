@@ -16,6 +16,7 @@ func Login (c *gin.Context) {
 	var loginData models.UserLoginData
 
 	c.ShouldBindJSON(&loginData)
+
 	id := database.AuthenticateUser(loginData)
 
 	if id != 0 {

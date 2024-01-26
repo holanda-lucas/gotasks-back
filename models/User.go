@@ -1,12 +1,15 @@
 package models
 
 import (
+	"time"
+
 	"github.com/go-playground/validator/v10"
-	"gorm.io/gorm"
 )
 
 type User struct {
-	gorm.Model
+	ID                 uint `gorm:"primaryKey"`
+  	CreatedAt          time.Time `json:"created_at"`
+  	UpdatedAt 		   time.Time `json:"updated_at"`
 	Email              string `json:"email" validate:"required,email" gorm:"unique"`
 	Name               string `json:"name" validate:"required"`
     Password           string `json:"password" validate:"required"`
@@ -14,7 +17,9 @@ type User struct {
 
 // Diferentes structs para diferentes possibilidades de dados
 type UserJSON struct {
-	gorm.Model
+	ID                 uint `gorm:"primaryKey"`
+  	CreatedAt          time.Time `json:"created_at"`
+  	UpdatedAt 		   time.Time `json:"updated_at"`
 	Email              string `json:"email" validate:"required,email"`
 	Name               string `json:"name" validate:"required"`
 }

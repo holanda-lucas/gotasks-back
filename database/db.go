@@ -20,6 +20,7 @@ func ConnectWithDatabase() {
 		log.Panic("Não foi possível se conectar com o banco de dados.")
 	}
 
+	// Criando as tabelas caso ainda não tenham sido criadas
 	DB.Table("users").AutoMigrate(&models.User{})
 	DB.Table("tasks").AutoMigrate(&models.Task{})
 	DB.Table("blacklisted_tokens").AutoMigrate(&models.BlacklistedToken{})

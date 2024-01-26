@@ -36,7 +36,7 @@ func EditTask(t *models.Task) {
 }
 
 func DeleteTask(id uint) {
-	DB.Delete(&models.Task{}, id)
+	DB.Unscoped().Delete(&models.Task{}, id)
 }
 
 func GetTasksFromUser(user_id uint) []models.Task {

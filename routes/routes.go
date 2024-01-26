@@ -12,8 +12,8 @@ func LoadRoutes() {
 	// Rotas de usuário
 	r.POST("/users", controllers.CreateUser)
 	r.GET("/users/:id", controllers.GetUser)
-	r.PUT("/users/:id", middlewares.AuthMiddleware, controllers.EditUser)
-	r.DELETE("/users/:id", middlewares.AuthMiddleware, controllers.DeleteUser)
+	r.PUT("/users/:id", middlewares.AuthMiddleware, middlewares.AuthUserOnlyMiddleware, controllers.EditUser)
+	r.DELETE("/users/:id", middlewares.AuthMiddleware, middlewares.AuthUserOnlyMiddleware, controllers.DeleteUser)
 	r.GET("/users/:id/tasks", middlewares.AuthMiddleware, middlewares.AuthUserOnlyMiddleware, controllers.GetUserTasks)
 
 	// Rotas de tarefas

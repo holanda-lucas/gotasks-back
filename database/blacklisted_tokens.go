@@ -36,7 +36,7 @@ func DisposeExpiredTokens() {
 }
 
 func deleteToken (id uint) {
-	DB.Delete(&models.BlacklistedToken{}, id)
+	DB.Unscoped().Delete(&models.BlacklistedToken{}, id)
 }
 
 func getExpiredTokens () []models.BlacklistedToken {
